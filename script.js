@@ -1,5 +1,5 @@
 // Variables
-let humedadActual = Math.floor(Math.random() * 100); // Valor inicial de humedad aleatorio
+let humedadActual = Math.floor(Math.random() * 20); // Valor inicial de humedad aleatorio (0-20%)
 let historialHumedad = []; // Arreglo para almacenar los valores de humedad
 let tiempo = 0; // Tiempo simulado
 let haRegado = false; // Variable para simular si se ha regado
@@ -16,22 +16,22 @@ function mostrarSeccion(seccion) {
     document.getElementById(seccion).style.display = "block";
 }
 
-// Botón para ver humedad actual en la sección de sensores
+// Botón para mostrar humedad actual
 document.getElementById("btn-ver-humedad").addEventListener("click", () => {
     document.getElementById("humedad-sensor").textContent = `Humedad actual: ${humedadActual}%`;
 });
 
 // Obtener humedad actual y actualizar recomendación
 function obtenerHumedadActual() {
-    const cambio = Math.floor(Math.random() * 7) - 3; // Cambia entre -3 y +3
-    humedadActual += cambio;
-
-    // Simular riego si la humedad es menor de 20%
+    const cambio = Math.random() > 0.5 ? -Math.floor(Math.random() * 5) - 1 : 0; // Decremento entre 1 y 5%
+    
     if (humedadActual < 20 && !haRegado) {
         setTimeout(() => {
-            humedadActual += Math.floor(Math.random() * 10) + 20; // Aumenta de 20 a 30 unidades
+            humedadActual += Math.floor(Math.random() * 10) + 20; // Simular riego, aumento de 20 a 30%
             haRegado = true;
-        }, 60000); // Simula que se riega después de un minuto
+        }, 60000); // Simular riego después de un minuto
+    } else if (humedadActual >= 21) {
+        humedadActual += cambio; // Disminuir en niveles altos
     }
 
     // Evitar que la humedad sea menor que 0 o mayor que 100
@@ -53,7 +53,9 @@ function obtenerHumedadActual() {
     }
 
     // Guardar el valor de humedad en el historial
-    historialHumedad.unshift({ tiempo: tiempo++, humedad: humedadActual }); // Valores recientes primero
+    historialHumedad.unshift({ tiempo: tiempo++, humedad: humedadActual }); // Insertar al principio (últimos 20)
+    if (historialHumedad.length > 20) historialHumedad.pop(); // Limitar el historial a 20 entradas
+
     actualizarHistorial();
     actualizarGrafico();
 }
@@ -74,13 +76,15 @@ let ctx = document.getElementById('humidityChart').getContext('2d');
 let humidityChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: [], // Etiquetas de tiempo (simuladas)
+        labels: [], // Etiquetas de tiempo
         datasets: [{
             label: 'Humedad (%)',
             data: [], // Datos de humedad
             borderColor: 'rgba(103, 58, 183, 1)',
+            backgroundColor: 'rgba(103, 58, 183, 0.2)',
             borderWidth: 2,
-            fill: false
+            fill: true,
+            tension: 0.1
         }]
     },
     options: {
@@ -103,8 +107,8 @@ function actualizarGrafico() {
     humidityChart.update();
 }
 
-// Actualizar humedad cada 5 segundos
-setInterval(obtenerHumedadActual, 5000);
+// Actualizar humedad cada 1 minuto
+setInterval(obtenerHumedadActual, 60000); // 1 minuto en milisegundos
 
 // Perfil de usuario
 document.getElementById("form-perfil").addEventListener("submit", (e) => {
