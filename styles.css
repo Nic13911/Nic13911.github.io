@@ -81,11 +81,11 @@ form button:hover {
   background-color: #5e35b1;
 }
 
-#profileData {
+#profileData, #login-form {
   margin-top: 20px;
 }
 
-#profileData p {
+#profileData p, #login-form p {
   font-size: 18px;
 }
 

@@ -49,17 +49,39 @@
         <form id="form-perfil">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
+            
+            <label for="mail">Correo electrónico:</label>
+            <input type="email" id="mail" name="mail" placeholder="Ingresa tu correo electrónico">
+            
             <label for="idioma">Idioma:</label>
             <select id="idioma" name="idioma">
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
             </select>
-            <button type="submit">Guardar</button>
+            
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña">
+            
+            <label for="confirm-password">Confirmar Contraseña:</label>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirma tu contraseña">
+            
+            <button type="submit">Crear Perfil</button>
         </form>
-        <div id="profileData">
-            <h3>Datos del perfil guardados:</h3>
+        
+        <div id="profileData" style="display: none;">
+            <h3>Perfil guardado:</h3>
             <p id="nombre-guardado"></p>
+            <p id="mail-guardado"></p>
             <p id="idioma-guardado"></p>
+            <button id="btn-logout">Cerrar sesión</button>
+        </div>
+
+        <div id="login-form" style="display: none;">
+            <h3>Inicia sesión</h3>
+            <label for="login-password">Contraseña:</label>
+            <input type="password" id="login-password" placeholder="Ingresa tu contraseña">
+            <button id="btn-login">Iniciar sesión</button>
+            <p id="error-login" style="color: red;"></p>
         </div>
     </section>
 

@@ -2,6 +2,7 @@
 let humedadActual = Math.floor(Math.random() * 100); // Valor inicial de humedad aleatorio
 let historialHumedad = []; // Arreglo para almacenar los valores de humedad
 let tiempo = 0; // Tiempo simulado
+let haRegado = false; // Variable para simular si se ha regado
 
 // Cambiar entre secciones
 document.getElementById("btn-inicio").addEventListener("click", () => mostrarSeccion("inicio"));
@@ -15,27 +16,44 @@ function mostrarSeccion(seccion) {
     document.getElementById(seccion).style.display = "block";
 }
 
-// Simular humedad actual y cambios razonables
-function obtenerHumedadActual() {
-    let cambio = Math.floor(Math.random() * 6) - 3; // Cambios de -3 a +3 en la humedad para mantener la razonabilidad
-    humedadActual = Math.max(0, Math.min(100, humedadActual + cambio)); // Limitar entre 0 y 100%
+// Botón para ver humedad actual en la sección de sensores
+document.getElementById("btn-ver-humedad").addEventListener("click", () => {
+    document.getElementById("humedad-sensor").textContent = `Humedad actual: ${humedadActual}%`;
+});
 
-    document.getElementById("humedad-actual").innerText = `Humedad: ${humedadActual}%`;
-    
-    let recomendacion = "";
-    if (humedadActual <= 20) {
-        recomendacion = "Tienes que regar.";
-    } else if (humedadActual > 20 && humedadActual <= 40) {
-        recomendacion = "Tendrás que regar pronto.";
-    } else if (humedadActual > 40 && humedadActual <= 60) {
-        recomendacion = "No hace falta regar.";
-    } else {
-        recomendacion = "No riegues. Exceso de humedad.";
+// Obtener humedad actual y actualizar recomendación
+function obtenerHumedadActual() {
+    const cambio = Math.floor(Math.random() * 7) - 3; // Cambia entre -3 y +3
+    humedadActual += cambio;
+
+    // Simular riego si la humedad es menor de 20%
+    if (humedadActual < 20 && !haRegado) {
+        setTimeout(() => {
+            humedadActual += Math.floor(Math.random() * 10) + 20; // Aumenta de 20 a 30 unidades
+            haRegado = true;
+        }, 60000); // Simula que se riega después de un minuto
     }
-    document.getElementById("recomendacion-riego").innerText = recomendacion;
+
+    // Evitar que la humedad sea menor que 0 o mayor que 100
+    if (humedadActual < 0) humedadActual = 0;
+    if (humedadActual > 100) humedadActual = 100;
+
+    // Mostrar la humedad actual en la página principal
+    document.getElementById("humedad-actual").textContent = `${humedadActual}%`;
+
+    // Mostrar recomendación de riego
+    if (humedadActual < 20) {
+        document.getElementById("recomendacion-riego").textContent = "Tienes que regar.";
+    } else if (humedadActual < 40) {
+        document.getElementById("recomendacion-riego").textContent = "Tendrás que regar pronto.";
+    } else if (humedadActual < 60) {
+        document.getElementById("recomendacion-riego").textContent = "No hace falta regar.";
+    } else {
+        document.getElementById("recomendacion-riego").textContent = "No riegues. Exceso de humedad.";
+    }
 
     // Guardar el valor de humedad en el historial
-    historialHumedad.push({ tiempo: tiempo++, humedad: humedadActual });
+    historialHumedad.unshift({ tiempo: tiempo++, humedad: humedadActual }); // Valores recientes primero
     actualizarHistorial();
     actualizarGrafico();
 }
@@ -69,7 +87,8 @@ let humidityChart = new Chart(ctx, {
         responsive: true,
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                max: 100
             }
         }
     }
@@ -87,26 +106,68 @@ function actualizarGrafico() {
 // Actualizar humedad cada 5 segundos
 setInterval(obtenerHumedadActual, 5000);
 
-// Guardar y mostrar perfil
+// Perfil de usuario
 document.getElementById("form-perfil").addEventListener("submit", (e) => {
     e.preventDefault();
     const nombre = document.getElementById("nombre").value;
+    const mail = document.getElementById("mail").value;
     const idioma = document.getElementById("idioma").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
     
-    // Guardar en LocalStorage
+    if (password !== confirmPassword) {
+        alert("Las contraseñas no coinciden.");
+        return;
+    }
+    
+    // Guardar perfil en LocalStorage
     localStorage.setItem("nombre", nombre);
+    localStorage.setItem("mail", mail);
     localStorage.setItem("idioma", idioma);
+    localStorage.setItem("password", password);
     
     mostrarPerfil();
 });
 
 function mostrarPerfil() {
     const nombreGuardado = localStorage.getItem("nombre") || "No guardado";
+    const mailGuardado = localStorage.getItem("mail") || "No guardado";
     const idiomaGuardado = localStorage.getItem("idioma") || "No guardado";
     
     document.getElementById("nombre-guardado").textContent = `Nombre: ${nombreGuardado}`;
+    document.getElementById("mail-guardado").textContent = `Correo: ${mailGuardado}`;
     document.getElementById("idioma-guardado").textContent = `Idioma: ${idiomaGuardado}`;
+
+    document.getElementById("form-perfil").style.display = "none";
+    document.getElementById("profileData").style.display = "block";
+    document.getElementById("login-form").style.display = "none";
 }
 
+// Iniciar sesión con contraseña
+document.getElementById("btn-login").addEventListener("click", () => {
+    const inputPassword = document.getElementById("login-password").value;
+    const storedPassword = localStorage.getItem("password");
+
+    if (inputPassword === storedPassword) {
+        mostrarPerfil();
+        document.getElementById("error-login").textContent = "";
+    } else {
+        document.getElementById("error-login").textContent = "Contraseña incorrecta.";
+    }
+});
+
+// Cerrar sesión
+document.getElementById("btn-logout").addEventListener("click", () => {
+    document.getElementById("form-perfil").style.display = "block";
+    document.getElementById("profileData").style.display = "none";
+    document.getElementById("login-form").style.display = "none";
+});
+
 // Mostrar perfil guardado al cargar la página
-document.addEventListener("DOMContentLoaded", mostrarPerfil);
+document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("nombre")) {
+        document.getElementById("login-form").style.display = "block";
+    } else {
+        mostrarPerfil();
+    }
+});
