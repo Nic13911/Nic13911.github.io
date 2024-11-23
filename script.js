@@ -4,7 +4,8 @@ let historialHumedad = []; // Historial de valores de humedad
 let tiempo = 0; // Tiempo simulado
 
 // Referencias a elementos del DOM
-const humedadActualElemento = document.getElementById("humedad-actual");
+const humedadActualInicio = document.getElementById("humedad-actual-inicio");
+const humedadActualSensores = document.getElementById("humedad-actual-sensores");
 const listaHistorial = document.getElementById("lista-historial");
 
 // Inicialización del gráfico
@@ -62,37 +63,41 @@ function obtenerHumedadActual() {
     if (humedadActual < 0) humedadActual = 0;
     if (humedadActual > 100) humedadActual = 100;
 
-    // Actualizar en el DOM
-    humedadActualElemento.textContent = `${humedadActual}%`;
+    // Actualizar en el DOM tanto en la sección de Inicio como en Sensores
+    humedadActualInicio.textContent = `${humedadActual}%`;
+    humedadActualSensores.textContent = `${humedadActual}%`;
 
-    // Guardar en el historial
-    historialHumedad.unshift({ tiempo: tiempo++, humedad: humedadActual });
-    if (historialHumedad.length > 20) historialHumedad.pop();
-
+    // Actualizar historial y gráfico
     actualizarHistorial();
     actualizarGrafico();
 }
 
-// Función para actualizar la lista de historial
+// Función para actualizar el historial de humedad
 function actualizarHistorial() {
+    historialHumedad.unshift({ tiempo: tiempo++, valor: humedadActual });
+
+    // Limitar el historial a los últimos 20 registros
+    if (historialHumedad.length > 20) historialHumedad.pop();
+
     listaHistorial.innerHTML = '';
-    historialHumedad.forEach(entry => {
-        const li = document.createElement("li");
-        li.textContent = `Tiempo ${entry.tiempo}: Humedad ${entry.humedad}%`;
+    historialHumedad.forEach((entrada) => {
+        const li = document.createElement('li');
+        li.textContent = `Tiempo: ${entrada.tiempo} min - Humedad: ${entrada.valor}%`;
         listaHistorial.appendChild(li);
     });
 }
 
-// Función para actualizar el gráfico
+// Función para actualizar el gráfico de humedad
 function actualizarGrafico() {
-    let labels = historialHumedad.map(entry => `T${entry.tiempo}`);
-    let data = historialHumedad.map(entry => entry.humedad);
+    const labels = historialHumedad.map(entry => `${entry.tiempo} min`);
+    const data = historialHumedad.map(entry => entry.valor);
+
     humidityChart.data.labels = labels;
     humidityChart.data.datasets[0].data = data;
     humidityChart.update();
 }
 
-// Botón para ver humedad actual
+// Botón para ver humedad actual en la sección de Sensores
 document.getElementById("btn-ver-humedad").addEventListener("click", obtenerHumedadActual);
 
 // Actualizar cada minuto
