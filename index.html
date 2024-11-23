@@ -7,107 +7,61 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <h1>Sistema de Riego</h1>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Sensores</a></li>
-                <li><a href="#">Historial</a></li>
-                <li><a href="#">Perfil</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main>
-        <section id="dashboard">
-            <h2>Estado Actual</h2>
-            <div class="sensor-data">
-                <p>Humedad del Suelo: <span id="humedad">35%</span></p>
-                <p>Recomendación: <span id="recomendacion">No regar ahora</span></p>
-            </div>
-            <button id="refresh">Actualizar Datos</button>
-        </section>
+    <!-- Navbar superior -->
+    <nav>
+        <button id="btn-inicio">Inicio</button>
+        <button id="btn-sensores">Sensores</button>
+        <button id="btn-historial">Historial</button>
+        <button id="btn-perfil">Perfil</button>
+    </nav>
 
-        <section id="registro">
-            <h2>Registra tus plantaciones</h2>
-            <form id="formulario">
-                <label for="nombre">Nombre de la Plantación:</label>
-                <input type="text" id="nombre" required>
+    <!-- Sección de Inicio -->
+    <section id="inicio" class="section">
+        <h1>Sistema de Riego Inteligente</h1>
+        <p>Este sistema utiliza sensores de humedad para monitorear el estado del suelo y sugerir el mejor momento para regar tus plantaciones. Con el registro histórico de humedad, podrás optimizar el uso de agua en tu sistema de riego, ayudando a cuidar el medio ambiente y ahorrar recursos.</p>
+        <div id="humedad-actual-container">
+            <h2>Humedad Actual</h2>
+            <p id="humedad-actual">Cargando...</p>
+            <p id="recomendacion-riego">Evaluando la recomendación...</p>
+        </div>
+    </section>
 
-                <label for="tamaño">Tamaño (m²):</label>
-                <input type="number" id="tamaño" required>
+    <!-- Sección de Sensores -->
+    <section id="sensores" class="section">
+        <h1>Sensores de Humedad</h1>
+        <p>Esta página simula los valores de humedad detectados por los sensores en tiempo real.</p>
+        <button id="btn-ver-humedad">Ver Humedad Actual</button>
+        <p id="humedad-sensor">Cargando...</p>
+    </section>
 
-                <button type="submit">Registrar</button>
-            </form>
-        </section>
-    </main>
+    <!-- Sección de Historial -->
+    <section id="historial" class="section">
+        <h1>Historial de Humedad</h1>
+        <canvas id="humidityChart"></canvas>
+    </section>
 
-    <footer>
-        <p>© 2024 Sistema de Riego Inteligente</p>
-    </footer>
+    <!-- Sección de Perfil -->
+    <section id="perfil" class="section">
+        <h1>Perfil de Usuario</h1>
+        <form id="form-perfil">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
+            <label for="idioma">Idioma:</label>
+            <select id="idioma" name="idioma">
+                <option value="es">Español</option>
+                <option value="en">Inglés</option>
+            </select>
+            <button type="submit">Guardar</button>
+        </form>
+        <div id="profileData">
+            <h3>Datos del perfil guardados:</h3>
+            <p id="nombre-guardado"></p>
+            <p id="idioma-guardado"></p>
+        </div>
+    </section>
 
+    <!-- JS para funcionalidad -->
     <script src="script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>App de Riego</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-  <!-- Barra de navegación -->
-  <nav>
-    <button onclick="showSection('inicio')">Inicio</button>
-    <button onclick="showSection('sensores')">Sensores</button>
-    <button onclick="showSection('perfil')">Perfil</button>
-    <button onclick="showSection('historial')">Historial</button>
-  </nav>
-
-  <!-- Sección de inicio -->
-  <div id="inicio" class="section">
-    <h2>Bienvenido a la App de Riego</h2>
-    <p>Monitorea y controla el sistema de riego.</p>
-  </div>
-
-  <!-- Sección de sensores -->
-  <div id="sensores" class="section" style="display:none;">
-    <h2>Sensores</h2>
-    <p>Aquí se mostrarán los datos de los sensores de humedad.</p>
-  </div>
-
-  <!-- Sección de perfil -->
-  <div id="perfil" class="section" style="display:none;">
-    <h2>Perfil</h2>
-    <form id="profileForm">
-      <label for="name">Nombre:</label>
-      <input type="text" id="name" required>
-      <br>
-      <label for="email">Correo electrónico:</label>
-      <input type="email" id="email" required>
-      <br>
-      <label for="password">Contraseña:</label>
-      <input type="password" id="password" required>
-      <br>
-      <button type="submit">Guardar perfil</button>
-    </form>
-    <div id="profileData" style="display:none;">
-      <h3>Tu perfil</h3>
-      <p><strong>Nombre:</strong> <span id="displayName"></span></p>
-      <p><strong>Correo electrónico:</strong> <span id="displayEmail"></span></p>
-    </div>
-  </div>
-
-  <!-- Sección de historial -->
-  <div id="historial" class="section" style="display:none;">
-    <h2>Historial de Humedad</h2>
-    <canvas id="humidityChart" width="400" height="200"></canvas>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
