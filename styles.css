@@ -89,11 +89,24 @@ form button:hover {
   font-size: 18px;
 }
 
+/* Historial de humedad */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background-color: #f1f1f1;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 4px;
+}
+
 /* Chart */
 canvas {
   max-width: 100%;
   height: auto;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 /* Media Queries */

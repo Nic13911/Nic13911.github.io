@@ -1,5 +1,7 @@
 // Variables
-let humedadActual = 0;
+let humedadActual = Math.floor(Math.random() * 100); // Valor inicial de humedad aleatorio
+let historialHumedad = []; // Arreglo para almacenar los valores de humedad
+let tiempo = 0; // Tiempo simulado
 
 // Cambiar entre secciones
 document.getElementById("btn-inicio").addEventListener("click", () => mostrarSeccion("inicio"));
@@ -13,54 +15,51 @@ function mostrarSeccion(seccion) {
     document.getElementById(seccion).style.display = "block";
 }
 
-// Simular humedad actual
+// Simular humedad actual y cambios razonables
 function obtenerHumedadActual() {
-    humedadActual = Math.floor(Math.random() * 100);
+    let cambio = Math.floor(Math.random() * 6) - 3; // Cambios de -3 a +3 en la humedad para mantener la razonabilidad
+    humedadActual = Math.max(0, Math.min(100, humedadActual + cambio)); // Limitar entre 0 y 100%
+
     document.getElementById("humedad-actual").innerText = `Humedad: ${humedadActual}%`;
-    document.getElementById("recomendacion-riego").innerText = humedadActual >= 20 && humedadActual <= 60
-        ? "Recomendación: No es necesario regar."
-        : "Recomendación: Es recomendable regar.";
+    
+    let recomendacion = "";
+    if (humedadActual <= 20) {
+        recomendacion = "Tienes que regar.";
+    } else if (humedadActual > 20 && humedadActual <= 40) {
+        recomendacion = "Tendrás que regar pronto.";
+    } else if (humedadActual > 40 && humedadActual <= 60) {
+        recomendacion = "No hace falta regar.";
+    } else {
+        recomendacion = "No riegues. Exceso de humedad.";
+    }
+    document.getElementById("recomendacion-riego").innerText = recomendacion;
+
+    // Guardar el valor de humedad en el historial
+    historialHumedad.push({ tiempo: tiempo++, humedad: humedadActual });
+    actualizarHistorial();
+    actualizarGrafico();
 }
 
-setInterval(obtenerHumedadActual, 5000); // Actualiza cada 5 segundos
-
-// Humedad en la sección de sensores
-document.getElementById("btn-ver-humedad").addEventListener("click", () => {
-    document.getElementById("humedad-sensor").innerText = `Humedad actual: ${humedadActual}%`;
-});
-
-// Guardar perfil en LocalStorage
-document.getElementById("form-perfil").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const nombre = document.getElementById("nombre").value;
-    const idioma = document.getElementById("idioma").value;
-
-    localStorage.setItem("nombre", nombre);
-    localStorage.setItem("idioma", idioma);
-
-    mostrarPerfilGuardado();
-});
-
-function mostrarPerfilGuardado() {
-    const nombreGuardado = localStorage.getItem("nombre");
-    const idiomaGuardado = localStorage.getItem("idioma");
-
-    document.getElementById("nombre-guardado").innerText = `Nombre: ${nombreGuardado}`;
-    document.getElementById("idioma-guardado").innerText = `Idioma: ${idiomaGuardado}`;
+// Actualizar la lista de historial
+function actualizarHistorial() {
+    const listaHistorial = document.getElementById("lista-historial");
+    listaHistorial.innerHTML = ""; // Limpiar la lista
+    historialHumedad.forEach(entry => {
+        const li = document.createElement("li");
+        li.textContent = `Tiempo ${entry.tiempo}: Humedad ${entry.humedad}%`;
+        listaHistorial.appendChild(li);
+    });
 }
 
-// Cargar perfil guardado al cargar la página
-document.addEventListener("DOMContentLoaded", mostrarPerfilGuardado);
-
-// Gráfico de Humedad (Historial)
-const ctx = document.getElementById('humidityChart').getContext('2d');
-const chart = new Chart(ctx, {
+// Configurar el gráfico de humedad
+let ctx = document.getElementById('humidityChart').getContext('2d');
+let humidityChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ['1', '2', '3', '4', '5'], // Simular etiquetas (puedes cambiarlo por fechas o horas)
+        labels: [], // Etiquetas de tiempo (simuladas)
         datasets: [{
             label: 'Humedad (%)',
-            data: [30, 50, 40, 60, 45], // Simular valores de humedad
+            data: [], // Datos de humedad
             borderColor: 'rgba(103, 58, 183, 1)',
             borderWidth: 2,
             fill: false
@@ -75,3 +74,39 @@ const chart = new Chart(ctx, {
         }
     }
 });
+
+// Actualizar gráfico con datos del historial
+function actualizarGrafico() {
+    let labels = historialHumedad.map(entry => `T${entry.tiempo}`);
+    let data = historialHumedad.map(entry => entry.humedad);
+    humidityChart.data.labels = labels;
+    humidityChart.data.datasets[0].data = data;
+    humidityChart.update();
+}
+
+// Actualizar humedad cada 5 segundos
+setInterval(obtenerHumedadActual, 5000);
+
+// Guardar y mostrar perfil
+document.getElementById("form-perfil").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById("nombre").value;
+    const idioma = document.getElementById("idioma").value;
+    
+    // Guardar en LocalStorage
+    localStorage.setItem("nombre", nombre);
+    localStorage.setItem("idioma", idioma);
+    
+    mostrarPerfil();
+});
+
+function mostrarPerfil() {
+    const nombreGuardado = localStorage.getItem("nombre") || "No guardado";
+    const idiomaGuardado = localStorage.getItem("idioma") || "No guardado";
+    
+    document.getElementById("nombre-guardado").textContent = `Nombre: ${nombreGuardado}`;
+    document.getElementById("idioma-guardado").textContent = `Idioma: ${idiomaGuardado}`;
+}
+
+// Mostrar perfil guardado al cargar la página
+document.addEventListener("DOMContentLoaded", mostrarPerfil);

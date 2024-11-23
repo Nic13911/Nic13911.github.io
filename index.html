@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Riego Inteligente</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Incluir Chart.js -->
 </head>
 <body>
 
@@ -19,7 +20,7 @@
     <!-- Sección de Inicio -->
     <section id="inicio" class="section">
         <h1>Sistema de Riego Inteligente</h1>
-        <p>Este sistema utiliza sensores de humedad para monitorear el estado del suelo y sugerir el mejor momento para regar tus plantaciones. Con el registro histórico de humedad, podrás optimizar el uso de agua en tu sistema de riego, ayudando a cuidar el medio ambiente y ahorrar recursos.</p>
+        <p>Este sistema utiliza sensores de humedad para monitorear el estado del suelo y sugerir el mejor momento para regar tus plantaciones.</p>
         <div id="humedad-actual-container">
             <h2>Humedad Actual</h2>
             <p id="humedad-actual">Cargando...</p>
@@ -30,7 +31,7 @@
     <!-- Sección de Sensores -->
     <section id="sensores" class="section">
         <h1>Sensores de Humedad</h1>
-        <p>Esta página simula los valores de humedad detectados por los sensores en tiempo real.</p>
+        <p>Esta página muestra los valores de humedad detectados por los sensores en tiempo real.</p>
         <button id="btn-ver-humedad">Ver Humedad Actual</button>
         <p id="humedad-sensor">Cargando...</p>
     </section>
@@ -38,7 +39,8 @@
     <!-- Sección de Historial -->
     <section id="historial" class="section">
         <h1>Historial de Humedad</h1>
-        <canvas id="humidityChart"></canvas>
+        <ul id="lista-historial"></ul> <!-- Lista de historial de humedad -->
+        <canvas id="humidityChart"></canvas> <!-- Gráfico del historial de humedad -->
     </section>
 
     <!-- Sección de Perfil -->
