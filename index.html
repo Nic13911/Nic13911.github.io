@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Riego Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Sistema de Riego</h1>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Sensores</a></li>
+                <li><a href="#">Historial</a></li>
+                <li><a href="#">Perfil</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="dashboard">
+            <h2>Estado Actual</h2>
+            <div class="sensor-data">
+                <p>Humedad del Suelo: <span id="humedad">35%</span></p>
+                <p>Recomendación: <span id="recomendacion">No regar ahora</span></p>
+            </div>
+            <button id="refresh">Actualizar Datos</button>
+        </section>
+
+        <section id="registro">
+            <h2>Registra tus plantaciones</h2>
+            <form id="formulario">
+                <label for="nombre">Nombre de la Plantación:</label>
+                <input type="text" id="nombre" required>
+
+                <label for="tamaño">Tamaño (m²):</label>
+                <input type="number" id="tamaño" required>
+
+                <button type="submit">Registrar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Sistema de Riego Inteligente</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
