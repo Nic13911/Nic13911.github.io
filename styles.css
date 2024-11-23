@@ -1,125 +1,92 @@
-/* General Styles */
+/* Estilos generales */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
   margin: 0;
   padding: 0;
-  color: #333;
+  background-color: #f0f0f0;
 }
 
 /* Navbar */
 nav {
-  display: flex;
-  justify-content: space-around;
-  background-color: #673ab7; /* Morado */
-  padding: 15px;
+  background-color: #673ab7;
+  padding: 1rem;
+  text-align: center;
 }
 
 nav button {
   background-color: #9575cd;
-  color: white;
   border: none;
+  color: white;
   padding: 10px 20px;
+  margin: 0 5px;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
 }
 
 nav button:hover {
   background-color: #7e57c2;
 }
 
-/* Section styles */
+/* Secciones */
 .section {
   display: none;
-  padding: 20px;
-  margin: 20px;
+  padding: 2rem;
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  margin: 1rem auto;
+  width: 80%;
+  max-width: 800px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-#inicio {
-  display: block; /* Mostrar sección de inicio al cargar */
-}
-
-h1, h2 {
+.section h1 {
   color: #673ab7;
 }
 
-/* Formulario de perfil */
-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 400px;
-}
-
+/* Formularios */
 form label {
-  margin-top: 10px;
-  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
 }
 
-form input, form select {
+form input, form select, form button {
+  width: 100%;
   padding: 10px;
-  margin-top: 5px;
+  margin: 10px 0;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
-form button {
-  background-color: #673ab7;
-  color: white;
-  border: none;
-  padding: 10px;
-  margin-top: 20px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-form button:hover {
-  background-color: #5e35b1;
-}
-
-#profileData, #login-form {
-  margin-top: 20px;
-}
-
-#profileData p, #login-form p {
-  font-size: 18px;
-}
-
-/* Historial de humedad */
-ul {
-  list-style-type: none;
+/* Historial */
+#lista-historial {
+  list-style: none;
   padding: 0;
 }
 
-ul li {
-  background-color: #f1f1f1;
+#lista-historial li {
+  padding: 5px;
   margin: 5px 0;
-  padding: 10px;
-  border-radius: 4px;
+  background-color: #eee;
+  border-left: 4px solid #673ab7;
 }
 
-/* Chart */
+/* Gráfico */
 canvas {
-  max-width: 100%;
-  height: auto;
-  margin: 20px auto;
+  margin-top: 2rem;
+  background-color: white;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-  nav {
-      flex-direction: column;
-  }
+/* Hacer visible la sección activa */
+#inicio, #sensores, #historial, #perfil {
+  display: none;
+}
 
+/* Media queries para responsive design */
+@media (max-width: 768px) {
   nav button {
-      margin-bottom: 10px;
+      display: block;
+      margin: 10px auto;
   }
 
   .section {
-      margin: 10px;
+      width: 95%;
   }
 }

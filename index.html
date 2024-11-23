@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Riego Inteligente</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Incluir Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Referencia a Chart.js -->
 </head>
 <body>
-
     <!-- Navbar superior -->
     <nav>
         <button id="btn-inicio">Inicio</button>
@@ -19,70 +18,41 @@
 
     <!-- Sección de Inicio -->
     <section id="inicio" class="section">
-        <h1>Sistema de Riego Inteligente</h1>
-        <p>Este sistema utiliza sensores de humedad para monitorear el estado del suelo y sugerir el mejor momento para regar tus plantaciones.</p>
-        <div id="humedad-actual-container">
-            <h2>Humedad Actual</h2>
-            <p id="humedad-actual">Cargando...</p>
-            <p id="recomendacion-riego">Evaluando la recomendación...</p>
-        </div>
+        <h1>Bienvenido al Sistema de Riego Inteligente</h1>
+        <p>Este sistema te ayudará a gestionar el riego de tus cultivos según la humedad del suelo.</p>
     </section>
 
     <!-- Sección de Sensores -->
     <section id="sensores" class="section">
-        <h1>Sensores de Humedad</h1>
-        <p>Esta página muestra los valores de humedad detectados por los sensores en tiempo real.</p>
+        <h1>Medición de Humedad</h1>
+        <p>Humedad actual: <span id="humedad-actual">Cargando...</span></p>
         <button id="btn-ver-humedad">Ver Humedad Actual</button>
-        <p id="humedad-sensor">Cargando...</p>
     </section>
 
     <!-- Sección de Historial -->
     <section id="historial" class="section">
         <h1>Historial de Humedad</h1>
         <ul id="lista-historial"></ul> <!-- Lista de historial de humedad -->
-        <canvas id="humidityChart"></canvas> <!-- Gráfico del historial de humedad -->
+        <canvas id="humidityChart" width="400" height="200"></canvas> <!-- Gráfico del historial de humedad -->
     </section>
 
     <!-- Sección de Perfil -->
     <section id="perfil" class="section">
-        <h1>Perfil de Usuario</h1>
+        <h1>Crear Perfil</h1>
         <form id="form-perfil">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
-            
-            <label for="mail">Correo electrónico:</label>
-            <input type="email" id="mail" name="mail" placeholder="Ingresa tu correo electrónico">
-            
+            <input type="text" id="nombre" required>
+            <label for="mail">Mail:</label>
+            <input type="email" id="mail" required>
             <label for="idioma">Idioma:</label>
-            <select id="idioma" name="idioma">
+            <select id="idioma">
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
             </select>
-            
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña">
-            
-            <label for="confirm-password">Confirmar Contraseña:</label>
-            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirma tu contraseña">
-            
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" id="contrasena" required>
             <button type="submit">Crear Perfil</button>
         </form>
-        
-        <div id="profileData" style="display: none;">
-            <h3>Perfil guardado:</h3>
-            <p id="nombre-guardado"></p>
-            <p id="mail-guardado"></p>
-            <p id="idioma-guardado"></p>
-            <button id="btn-logout">Cerrar sesión</button>
-        </div>
-
-        <div id="login-form" style="display: none;">
-            <h3>Inicia sesión</h3>
-            <label for="login-password">Contraseña:</label>
-            <input type="password" id="login-password" placeholder="Ingresa tu contraseña">
-            <button id="btn-login">Iniciar sesión</button>
-            <p id="error-login" style="color: red;"></p>
-        </div>
     </section>
 
     <!-- JS para funcionalidad -->
