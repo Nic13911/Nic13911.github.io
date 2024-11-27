@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    text-align: center; /* Centramos el contenido */
 }
 
 header {
@@ -19,28 +20,39 @@ header h1 {
 nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Centramos el menú de navegación */
 }
 
 nav ul li {
-    display: inline;
     margin: 0 15px;
 }
 
 nav ul li button {
-    background: none;
+    background-color: transparent;
     border: none;
     color: white;
     font-size: 16px;
     cursor: pointer;
+    padding: 10px 15px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 nav ul li button:hover {
-    text-decoration: underline;
+    background-color: #5E35B1;
+    color: #fff;
+}
+
+nav ul li button:focus {
+    outline: none;
 }
 
 .section {
     display: none;
     padding: 20px;
+    max-width: 800px;
+    margin: 0 auto; /* Alineación central de las secciones */
 }
 
 .section.active {
@@ -72,6 +84,7 @@ ul li {
     margin-bottom: 5px;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
 }
 
 ul li:hover {
