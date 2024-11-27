@@ -32,7 +32,7 @@ nav ul li {
 nav ul li button {
     background-color: transparent;
     border: none;
-    color: white;
+    color: #673AB7;
     font-size: 16px;
     cursor: pointer;
     padding: 10px 15px;
