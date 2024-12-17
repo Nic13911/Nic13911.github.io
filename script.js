@@ -160,3 +160,50 @@ setInterval(actualizarSensores, 60000);
 
 // Generar listas de sensores y mostrar la sección de inicio
 generarListaSensores();
+
+// Variables globales adicionales
+let intervaloRiego = null;
+
+// Función para activar el riego
+function activarRiego() {
+    if (!sensorSeleccionado) return alert("Selecciona un sensor primero.");
+
+    // Detener cualquier riego previo
+    if (intervaloRiego) clearInterval(intervaloRiego);
+
+    // Incrementar gradualmente la humedad
+    intervaloRiego = setInterval(() => {
+        if (sensorSeleccionado.humedad < 100) {
+            sensorSeleccionado.humedad += Math.random() * 5 + 1; // Incremento gradual
+            if (sensorSeleccionado.humedad > 100) sensorSeleccionado.humedad = 100; // Máximo 100%
+            sensorSeleccionado.historial.unshift(sensorSeleccionado.humedad);
+            if (sensorSeleccionado.historial.length > 20) sensorSeleccionado.historial.pop();
+            document.getElementById('humedad-actual-sensor').textContent = `${sensorSeleccionado.humedad.toFixed(1)}%`;
+        }
+    }, 1000); // Cada segundo
+}
+
+// Función para cortar el riego
+function cortarRiego() {
+    if (!sensorSeleccionado) return alert("Selecciona un sensor primero.");
+
+    // Detener el incremento de humedad
+    if (intervaloRiego) clearInterval(intervaloRiego);
+
+    // Reducir gradualmente la humedad
+    intervaloRiego = setInterval(() => {
+        if (sensorSeleccionado.humedad > 20) {
+            sensorSeleccionado.humedad -= Math.random() * 2 + 0.5; // Decremento gradual
+            if (sensorSeleccionado.humedad < 20) sensorSeleccionado.humedad = 20; // Mínimo 20%
+            sensorSeleccionado.historial.unshift(sensorSeleccionado.humedad);
+            if (sensorSeleccionado.historial.length > 20) sensorSeleccionado.historial.pop();
+            document.getElementById('humedad-actual-sensor').textContent = `${sensorSeleccionado.humedad.toFixed(1)}%`;
+        } else {
+            clearInterval(intervaloRiego); // Detener reducción al llegar al mínimo
+        }
+    }, 1000); // Cada segundo
+}
+
+// Asignar eventos a los botones de riego
+document.getElementById("btn-activar-riego").addEventListener("click", activarRiego);
+document.getElementById("btn-cortar-riego").addEventListener("click", cortarRiego);
