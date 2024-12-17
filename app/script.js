@@ -10,6 +10,7 @@ let sensores = [
 
 let sensorSeleccionado = null;
 let ctx = document.getElementById('humidityChart').getContext('2d');
+let idiomaActual = 'es'; // Idioma por defecto
 
 // Inicialización del gráfico
 let humidityChart = new Chart(ctx, {
@@ -43,7 +44,11 @@ function mostrarSeccion(seccion) {
 }
 
 // Mostrar sección de inicio por defecto
-window.onload = () => mostrarSeccion("inicio");
+window.onload = () => {
+    mostrarSeccion("inicio");
+    cargarPreferenciasUsuario();
+    generarListaSensores();
+};
 
 // Manejadores de los botones del menú
 document.getElementById("btn-inicio").addEventListener("click", () => mostrarSeccion("inicio"));
@@ -67,18 +72,17 @@ function generarListaSensores() {
     });
 }
 
-// Función para seleccionar un sensor y mostrar su humedad actual con aviso
+// Función para seleccionar un sensor
 function seleccionarSensor(index) {
     sensorSeleccionado = sensores[index];
     document.getElementById('nombre-sensor').textContent = sensorSeleccionado.nombre;
     document.getElementById('humedad-actual-sensor').textContent = `${sensorSeleccionado.humedad}%`;
 
-    // Mostrar el aviso correspondiente al nivel de humedad
     let aviso = obtenerAvisoHumedad(sensorSeleccionado.humedad);
     document.getElementById('aviso-humedad-sensor').textContent = aviso;
 }
 
-// Función para generar el listado de sensores en la sección de Historial
+// Función para generar el listado de historial
 function generarListaHistorialSensores() {
     const listaHistorial = document.getElementById('lista-historial-sensores');
     listaHistorial.innerHTML = '';
@@ -91,25 +95,20 @@ function generarListaHistorialSensores() {
     });
 }
 
-// Función para mostrar el historial de un sensor seleccionado en la sección de Historial
+// Mostrar historial del sensor
 function mostrarHistorial(index) {
     sensorSeleccionado = sensores[index];
-
-    // Asegurarse de que haya datos históricos para el sensor
     if (sensorSeleccionado.historial.length > 0) {
         const labels = sensorSeleccionado.historial.map((_, i) => `Min ${sensorSeleccionado.tiempo - i}`).reverse();
         const data = sensorSeleccionado.historial.slice().reverse();
 
-        // Actualizar el gráfico con los datos del sensor seleccionado
         humidityChart.data.labels = labels;
         humidityChart.data.datasets[0].data = data;
         humidityChart.update();
 
-        // Mostrar el aviso correspondiente al nivel de humedad más reciente
         let aviso = obtenerAvisoHumedad(sensorSeleccionado.humedad);
         document.getElementById('aviso-humedad-historial').textContent = aviso;
     } else {
-        // Si no hay historial, vaciar el gráfico
         humidityChart.data.labels = [];
         humidityChart.data.datasets[0].data = [];
         humidityChart.update();
@@ -117,46 +116,58 @@ function mostrarHistorial(index) {
     }
 }
 
-// Función para actualizar los datos de los sensores cada minuto
+// Actualizar sensores
 function actualizarSensores() {
     sensores.forEach(sensor => {
         sensor.tiempo++;
-        if (sensor.humedad < 20) {
-            sensor.humedad += Math.floor(Math.random() * 10 + 20);
-        } else {
-            sensor.humedad -= Math.floor(Math.random() * 5);
-        }
+        sensor.humedad = Math.max(0, sensor.humedad - Math.floor(Math.random() * 5));
         sensor.historial.unshift(sensor.humedad);
         if (sensor.historial.length > 20) sensor.historial.pop();
     });
 
-    // Si hay un sensor seleccionado, actualizar la pantalla
     if (sensorSeleccionado) {
         document.getElementById('humedad-actual-sensor').textContent = `${sensorSeleccionado.humedad}%`;
         mostrarHistorial(sensores.indexOf(sensorSeleccionado));
     }
 }
 
-// Botón para mostrar humedad actual del sensor seleccionado
-document.getElementById("btn-ver-humedad").addEventListener('click', () => {
-    if (sensorSeleccionado) {
-        document.getElementById('humedad-actual-sensor').textContent = `${sensorSeleccionado.humedad}%`;
+// Función para obtener aviso de humedad
+function obtenerAvisoHumedad(humedad) {
+    if (humedad < 20) return idiomaActual === 'es' ? "Tienes que regar" : "You need to water";
+    if (humedad <= 60) return idiomaActual === 'es' ? "No hace falta riego" : "No need to water";
+    return idiomaActual === 'es' ? "Exceso de humedad, no regar" : "Too much moisture, don't water";
+}
+
+// Cambio de idioma
+document.getElementById("btn-idioma").addEventListener('click', () => {
+    idiomaActual = idiomaActual === 'es' ? 'en' : 'es';
+    alert(`Idioma cambiado a ${idiomaActual === 'es' ? 'Español' : 'Inglés'}`);
+});
+
+// Guardar preferencias del usuario
+function guardarPreferenciasUsuario() {
+    const nombreUsuario = document.getElementById('nombre-usuario').value;
+    localStorage.setItem('nombreUsuario', nombreUsuario);
+    localStorage.setItem('idioma', idiomaActual);
+}
+
+// Cargar preferencias del usuario
+function cargarPreferenciasUsuario() {
+    const nombreUsuario = localStorage.getItem('nombreUsuario') || 'Usuario';
+    idiomaActual = localStorage.getItem('idioma') || 'es';
+    document.getElementById('nombre-usuario').value = nombreUsuario;
+}
+
+// Validación de usuario
+document.getElementById("btn-guardar-perfil").addEventListener('click', () => {
+    const password = document.getElementById('password').value;
+    if (password.length < 6) {
+        alert("La contraseña debe tener al menos 6 caracteres.");
+    } else {
+        guardarPreferenciasUsuario();
+        alert("Perfil guardado correctamente.");
     }
 });
 
-// Función para obtener el aviso según el nivel de humedad
-function obtenerAvisoHumedad(humedad) {
-    if (humedad < 20) {
-        return "Tienes que regar";
-    } else if (humedad >= 21 && humedad <= 60) {
-        return "No hace falta riego";
-    } else {
-        return "Exceso de humedad, no regar";
-    }
-}
-
-// Actualizar sensores y lista cada minuto
+// Actualizar sensores cada minuto
 setInterval(actualizarSensores, 60000);
-
-// Generar listas de sensores y mostrar la sección de inicio
-generarListaSensores();
